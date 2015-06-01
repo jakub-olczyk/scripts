@@ -1,0 +1,15 @@
+_template() 
+{
+    local cur prev opts
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+    opts=`find -P $( xdg-user-dir TEMPLATES ) -type l | cut -d'/' -f 5`
+
+    if [[ ${cur} == * ]] ; then
+        COMPREPLY=( $(compgen -W "${opts}" ${cur}) )
+        return 0
+    fi
+}
+complete -F _template template
+
