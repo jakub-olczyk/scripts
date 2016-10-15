@@ -28,7 +28,7 @@ if [ -z $1 ] ; then
 	else
 		echo $SEARCH_RESULTS
 	fi
-	exit
+	exit 1
 fi
 if [ -z $2 ] ; then
 	echo $SPECIFY_FILENAME
