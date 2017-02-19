@@ -83,7 +83,7 @@ sub init { #{{{
     $num_wallpaper = @wallpapers; 
 
     if ($num_wallpaper == 0) {
-        my $retval = system('rm', '-rf', $tmp_storage);
+        my $retval = system('rm', '-f', $tmp_storage);
         die "No wallpapers left. Invoke again to start over.\n";
     }
     return;
