@@ -3,9 +3,11 @@
 # license: GPLv3+
 
 use strict;
-use warnings;
+#use warnings;
+#use diagnostics;
 
 use Getopt::Long;
+use Try::Tiny;
 
 my ($walldir, $help, $num_wallpaper);
 
@@ -65,8 +67,12 @@ sub init { #{{{
     #populate the variables
     @wallpapers = <"$walldir/*">;
     #check if no wallpapers where used before
-    eval {populate_hash()}; #trick for not killing script when no tmp_storage is present
-    
+    try{
+        populate_hash();
+    } catch {
+        warn "No used wallpapers!\n";
+    };
+
     if (scalar keys %used_wallpapers) { 
         for (my $i=0; $i < scalar @wallpapers; ++$i){
             undef $wallpapers[$i] if $used_wallpapers{$wallpapers[$i]};
@@ -75,9 +81,10 @@ sub init { #{{{
     }
 
     $num_wallpaper = @wallpapers; 
-    unless ($num_wallpaper) {
-        system('rm', '-rf', $tmp_storage);
-        init();
+
+    if ($num_wallpaper == 0) {
+        my $retval = system('rm', '-rf', $tmp_storage);
+        die "No wallpapers left. Invoke again to start over.\n";
     }
     return;
 }#}}}
